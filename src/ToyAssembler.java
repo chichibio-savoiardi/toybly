@@ -3,6 +3,7 @@ import java.util.HashMap;
 public class ToyAssembler {
 	private HashMap<String, Integer> state;
 	private int[] memory;
+	private String resultReg;
 
 	public ToyAssembler(int memoryCells) {
 		state = new HashMap<>();
@@ -25,6 +26,14 @@ public class ToyAssembler {
 		for (int i = 0; i < memory.length; i++) {
 			memory[i] = 0;
 		}
+	}
+
+	private int getReg(String reg) {
+		if (reg.equals("Z0")) {
+			return 0;
+		}
+
+		return this.state.getOrDefault(reg,  0);
 	}
 
 	@Override
@@ -77,6 +86,37 @@ public class ToyAssembler {
 
 		this.memory[memCell] = this.state.get(register);
 
+		return "";
+	}
+
+	public String add(String register1, String register2) {
+		if (!this.state.containsKey(register1)) {
+			return String.format("Register %s does not exist", register1);
+		}
+
+		if (!this.state.containsKey(register2)) {
+			return String.format("Register %s does not exist", register2);
+		}
+
+		int add = this.state.get(register1) + this.state.get(register2);
+
+		this.state.put("V0",  add);
+
+		return "";
+	}
+
+	public String mul(String register1, String register2) {
+		//
+		return "";
+	}
+
+	public String sub(String register1, String register2) {
+		//
+		return "";
+	}
+
+	public String div(String register1, String register2) {
+		//
 		return "";
 	}
 }
