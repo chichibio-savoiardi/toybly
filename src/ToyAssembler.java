@@ -3,7 +3,6 @@ import java.util.HashMap;
 public class ToyAssembler {
 	private HashMap<String, Integer> state;
 	private int[] memory;
-	private String resultReg;
 
 	public ToyAssembler(int memoryCells) {
 		state = new HashMap<>();
@@ -27,15 +26,7 @@ public class ToyAssembler {
 			memory[i] = 0;
 		}
 	}
-
-	private int getReg(String reg) {
-		if (reg.equals("Z0")) {
-			return 0;
-		}
-
-		return this.state.getOrDefault(reg,  0);
-	}
-
+	
 	@Override
 	public String toString() {
 		StringBuilder out = new StringBuilder();
@@ -50,8 +41,34 @@ public class ToyAssembler {
 		out.append("}");
 		return out.toString();
 	}
+	
+	private int getReg(String reg) {
+		if (reg.equals("Z0")) {
+			return 0;
+		}
 
-	public String set(int num, int memCell) {
+		return this.state.getOrDefault(reg,  0);
+	}
+
+	public String setReg(String reg, int val) {
+		if (!this.state.containsKey(reg)) {
+			return String.format("Register %s does not exist", reg);
+		}
+
+		switch (reg) {
+			case "Z0":
+			case "V0":
+				return "Cannot assign to registers Z0 or V0";
+			default:
+				break;
+		}
+		
+		this.state.put(reg, val);
+
+		return "";
+	}
+
+	public String setMem(int num, int memCell) {
 		if (!((memCell < this.memory.length) && (memCell >= 0))) {
 			return String.format("Memory cell num. %d does not exist", memCell);
 		}
@@ -59,6 +76,14 @@ public class ToyAssembler {
 		this.memory[memCell] = num;
 
 		return "";
+	}
+
+	public int getMem(int memCell) {
+		if (!((memCell < this.memory.length) && (memCell >= 0))) {
+			return 0;
+		}
+
+		return this.memory[memCell];
 	}
 
 	public String load(String register, int memCell) {
@@ -70,7 +95,7 @@ public class ToyAssembler {
 			return String.format("Memory cell num. %d does not exist", memCell);
 		}
 
-		this.state.put(register, this.memory[memCell]);
+		setReg(register, this.memory[memCell]);
 
 		return "";
 	}
@@ -84,7 +109,7 @@ public class ToyAssembler {
 			return String.format("Memory cell num. %d does not exist", memCell);
 		}
 
-		this.memory[memCell] = this.state.get(register);
+		setMem(getReg(register), memCell);
 
 		return "";
 	}
@@ -98,25 +123,58 @@ public class ToyAssembler {
 			return String.format("Register %s does not exist", register2);
 		}
 
-		int add = this.state.get(register1) + this.state.get(register2);
+		int res = this.state.get(register1) + this.state.get(register2);
 
-		this.state.put("V0",  add);
+		setReg("V0",  res);
 
 		return "";
 	}
 
 	public String mul(String register1, String register2) {
-		//
+		if (!this.state.containsKey(register1)) {
+			return String.format("Register %s does not exist", register1);
+		}
+
+		if (!this.state.containsKey(register2)) {
+			return String.format("Register %s does not exist", register2);
+		}
+
+		int res = this.state.get(register1) * this.state.get(register2);
+
+		setReg("V0",  res);
+
 		return "";
 	}
 
 	public String sub(String register1, String register2) {
-		//
+		if (!this.state.containsKey(register1)) {
+			return String.format("Register %s does not exist", register1);
+		}
+
+		if (!this.state.containsKey(register2)) {
+			return String.format("Register %s does not exist", register2);
+		}
+
+		int res = this.state.get(register1) - this.state.get(register2);
+
+		setReg("V0",  res);
+
 		return "";
 	}
 
 	public String div(String register1, String register2) {
-		//
+		if (!this.state.containsKey(register1)) {
+			return String.format("Register %s does not exist", register1);
+		}
+
+		if (!this.state.containsKey(register2)) {
+			return String.format("Register %s does not exist", register2);
+		}
+
+		int res = this.state.get(register1) / this.state.get(register2);
+
+		setReg("V0",  res);
+
 		return "";
 	}
 }
