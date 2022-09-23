@@ -4,6 +4,9 @@ import java.util.List;
 public class App {
 	public static void main(String[] args) throws Exception {
 		List<String[]> syntax = ToyParser.getSyntax(FileSystems.getDefault().getPath("./program.toybly"));
+		ToyAssembler toy = new ToyAssembler(16);
+		System.out.println(toy.execute(syntax));
+		System.out.println(toy.toString());
 	}
 
 	private void test() {
@@ -14,6 +17,5 @@ public class App {
 		toy.load("F1", 1);
 		toy.add("F0", "F1");
 		toy.store("V0", 2);
-		System.out.println(toy.toString());
 	}
 }

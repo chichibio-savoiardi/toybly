@@ -1,4 +1,5 @@
 import java.util.HashMap;
+import java.util.List;
 
 public class ToyAssembler {
 	private HashMap<String, Integer> state;
@@ -26,7 +27,35 @@ public class ToyAssembler {
 			memory[i] = 0;
 		}
 	}
-	
+
+	public String execute(List<String[]> syntax) {
+		StringBuilder out = new StringBuilder();
+		for (String[] args : syntax) {
+			switch (args[0].toLowerCase()) {
+				case "set":
+					out.append(setMem(Integer.parseInt(args[1]), Integer.parseInt(args[2])));
+					break;
+
+				case "load":
+					out.append(load(args[1], Integer.parseInt(args[2])));
+					break;
+
+				case "store":
+					out.append(store(args[1], Integer.parseInt(args[2])));
+					break;
+
+				case "add":
+					out.append(add(args[1], args[2]));
+					break;
+
+				default:
+					break;
+			}
+		}
+
+		return out.toString();
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder out = new StringBuilder();
@@ -41,13 +70,13 @@ public class ToyAssembler {
 		out.append("}");
 		return out.toString();
 	}
-	
+
 	private int getReg(String reg) {
 		if (reg.equals("Z0")) {
 			return 0;
 		}
 
-		return this.state.getOrDefault(reg,  0);
+		return this.state.getOrDefault(reg, 0);
 	}
 
 	public String setReg(String reg, int val) {
@@ -55,14 +84,10 @@ public class ToyAssembler {
 			return String.format("Register %s does not exist", reg);
 		}
 
-		switch (reg) {
-			case "Z0":
-			case "V0":
-				return "Cannot assign to registers Z0 or V0";
-			default:
-				break;
+		if (reg == "Z0") {
+			return "Cannot assign to Z0";
 		}
-		
+
 		this.state.put(reg, val);
 
 		return "";
@@ -125,7 +150,7 @@ public class ToyAssembler {
 
 		int res = this.state.get(register1) + this.state.get(register2);
 
-		setReg("V0",  res);
+		setReg("V0", res);
 
 		return "";
 	}
@@ -141,7 +166,7 @@ public class ToyAssembler {
 
 		int res = this.state.get(register1) * this.state.get(register2);
 
-		setReg("V0",  res);
+		setReg("V0", res);
 
 		return "";
 	}
@@ -157,7 +182,7 @@ public class ToyAssembler {
 
 		int res = this.state.get(register1) - this.state.get(register2);
 
-		setReg("V0",  res);
+		setReg("V0", res);
 
 		return "";
 	}
@@ -173,7 +198,7 @@ public class ToyAssembler {
 
 		int res = this.state.get(register1) / this.state.get(register2);
 
-		setReg("V0",  res);
+		setReg("V0", res);
 
 		return "";
 	}
