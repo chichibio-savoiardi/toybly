@@ -30,8 +30,16 @@ public class ToyAssembler {
 
 	public String execute(List<String[]> syntax) {
 		StringBuilder out = new StringBuilder();
-		for (String[] args : syntax) {
+
+		for (int i = 0; i < syntax.size(); i++) {
+			String[] args = syntax.get(i);
+			int lineNum = i + 1;
+
 			switch (args[0].toLowerCase()) {
+				case ";": // Comment
+					out.append("Skipping comment at line " + lineNum + "\n");
+					break;
+
 				case "set":
 					out.append(setMem(Integer.parseInt(args[1]), Integer.parseInt(args[2])));
 					break;
@@ -48,7 +56,20 @@ public class ToyAssembler {
 					out.append(add(args[1], args[2]));
 					break;
 
+				case "mul":
+					out.append(mul(args[1], args[2]));
+					break;
+
+				case "sub":
+					out.append(sub(args[1], args[2]));
+					break;
+
+				case "div":
+					out.append(div(args[1], args[2]));
+					break;
+
 				default:
+					out.append(String.format("Illegal operator '%s' at line %d\n", args[0], lineNum));
 					break;
 			}
 		}
