@@ -61,7 +61,7 @@ public class ToyAssembler {
 		// First pass to find all the labels
 		for (int i = 0; i < this.syntax.size(); i++) {
 			String[] args = this.syntax.get(i);
-
+			System.out.println(args.toString());
 			if (args[0].toLowerCase() == "label") {
 				this.labels.put(args[1].toLowerCase(), i);
 			}
@@ -133,13 +133,17 @@ public class ToyAssembler {
 	@Override
 	public String toString() {
 		StringBuilder out = new StringBuilder();
-		out.append("State: {");
+		out.append("Registers: {");
 		for (String reg : this.state.keySet()) {
 			out.append(reg + ": " + this.state.get(reg) + ", ");
 		}
 		out.append("}\nMemory: {");
 		for (int mem : this.memory) {
 			out.append(mem + ", ");
+		}
+		out.append("}\nLabels: {");
+		for (String label : this.labels.keySet()) {
+			out.append(String.format("%s: %d, ", label, labels.get(label)));
 		}
 		out.append("}");
 		return out.toString();

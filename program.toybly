@@ -1,9 +1,7 @@
-; Preping
+; Prepping
 SET 0 9
-SET 1 1
-LOAD F0 0
-LOAD F1 1
-LABEL loop
-SUB F0 F1
-JUMP loop
-SET 15 1
+; Execution
+LOAD R0 0
+JUMP lab
+STORE R0 10
+LABEL lab
