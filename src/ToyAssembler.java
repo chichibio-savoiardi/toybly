@@ -1,12 +1,19 @@
 import java.util.HashMap;
 import java.util.List;
+import java.nio.file.*;
+import java.util.ArrayList;
+import java.nio.charset.*;
+import java.io.IOException;
 
 public class ToyAssembler {
+	private List<String[]> syntax;
 	private HashMap<String, Integer> state;
+	private HashMap<String, Integer> labels;
 	private int[] memory;
 
 	public ToyAssembler(int memoryCells) {
 		state = new HashMap<>();
+		labels = new HashMap<>();
 		// 32 memory cells
 		memory = new int[memoryCells];
 		/*
@@ -28,11 +35,40 @@ public class ToyAssembler {
 		}
 	}
 
-	public String execute(List<String[]> syntax) {
+	public void parseFile(String filePath) {
+		Path file = Paths.get(filePath);
+        Charset charset = Charset.forName("UTF-8");
+
+        List<String[]> syntax = new ArrayList<>();
+            
+        try {
+            List<String> lines = Files.readAllLines(file, charset);
+            for (String line : lines) {
+                String[] tmp = line.split(" ", 5);
+                syntax.add(tmp);
+                //System.out.println(line);
+            }
+        } catch (IOException ex) {
+            System.out.println(ex);
+        }
+
+        this.syntax = syntax;
+    }
+
+	public String execute() {
 		StringBuilder out = new StringBuilder();
 
-		for (int i = 0; i < syntax.size(); i++) {
-			String[] args = syntax.get(i);
+		// First pass to find all the labels
+		for (int i = 0; i < this.syntax.size(); i++) {
+			String[] args = this.syntax.get(i);
+
+			if (args[0].toLowerCase() == "label") {
+				this.labels.put(args[1].toLowerCase(), i);
+			}
+		}
+
+		for (int i = 0; i < this.syntax.size(); i++) {
+			String[] args = this.syntax.get(i);
 			int lineNum = i + 1;
 
 			switch (args[0].toLowerCase()) {
@@ -66,6 +102,14 @@ public class ToyAssembler {
 
 				case "div":
 					out.append(div(args[1], args[2]));
+					break;
+
+				case "jump":
+					//
+					break;
+
+				case "jzero":
+					//
 					break;
 
 				default:
