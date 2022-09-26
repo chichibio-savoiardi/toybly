@@ -19,10 +19,13 @@ The function argument registers exist only to help in organizing working data, a
 
 ### Instructions
 
-- `SET N M`: Set Memory cell number `M` with number `N`.
+- `SET M N`: Set Memory cell number `M` with number `N`.
 - `LOAD R M`: Load the value of memory cell `M` into register `R`.
 - `STORE R M`: Store the value of register `R` into memory cell `M`.
 - `ADD F0 F1`: Add the values of `F0` and `F1`, store the value in `V0`.
 - `MUL F0 F1`: Multiply the values of `F0` and `F1`, store the value in `V0`.
 - `SUB F0 F1`: Subtract the value of `F1` from `F0`, store the value in `V0`.
 - `DIV F0 F1`: Divide the value of `F0` by `F1`, store the value in `V0`.
+- `LABEL L`: Set a label with name `L`.
+- `JUMP L`: Jump to label `L`.
+- `JZERO L R`: Jump to label `L` if `R` is NOT zero.

@@ -1,13 +1,9 @@
-; [0,0,0,...]
-SET 8 0
-SET 2 1
-; [8,2,0,0,0,...]
+; Preping
+SET 0 9
+SET 1 1
 LOAD F0 0
 LOAD F1 1
-ADD F0 F1
-STORE V0 2
-; [8,2,10,0,0,0,...]
-LOAD F0 2
-LOAD F1 1
-DIV F0 F1
-STORE V0 3
+LABEL loop
+SUB F0 F1
+JUMP loop
+SET 15 1

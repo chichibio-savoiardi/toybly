@@ -67,6 +67,7 @@ public class ToyAssembler {
 			}
 		}
 
+		// Execution
 		for (int i = 0; i < this.syntax.size(); i++) {
 			String[] args = this.syntax.get(i);
 			int lineNum = i + 1;
@@ -75,6 +76,9 @@ public class ToyAssembler {
 				case ";": // Comment
 					out.append("Skipping comment at line " + lineNum + "\n");
 					break;
+
+				case "end":
+					return "";
 
 				case "set":
 					out.append(setMem(Integer.parseInt(args[1]), Integer.parseInt(args[2])));
@@ -104,12 +108,17 @@ public class ToyAssembler {
 					out.append(div(args[1], args[2]));
 					break;
 
+				case "label":
+					break;
+
 				case "jump":
-					//
+					i = this.labels.getOrDefault(args[1].toLowerCase(), i);
 					break;
 
 				case "jzero":
-					//
+					if (getReg(args[2]) != 0) {
+						i = this.labels.getOrDefault(args[1].toLowerCase(), i);
+					}
 					break;
 
 				default:
@@ -158,7 +167,7 @@ public class ToyAssembler {
 		return "";
 	}
 
-	public String setMem(int num, int memCell) {
+	public String setMem(int memCell, int num) {
 		if (!((memCell < this.memory.length) && (memCell >= 0))) {
 			return String.format("Memory cell num. %d does not exist", memCell);
 		}
