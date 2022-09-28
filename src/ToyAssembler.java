@@ -14,8 +14,8 @@ public class ToyAssembler {
 	public ToyAssembler(int memoryCells) {
 		state = new HashMap<>();
 		labels = new HashMap<>();
-		// 32 memory cells
 		memory = new int[memoryCells];
+		syntax = new ArrayList<>();
 		/*
 		 * One hard wired zero
 		 * Five general porpuse registers
@@ -61,8 +61,7 @@ public class ToyAssembler {
 		// First pass to find all the labels
 		for (int i = 0; i < this.syntax.size(); i++) {
 			String[] args = this.syntax.get(i);
-			System.out.println(args.toString());
-			if (args[0].toLowerCase() == "label") {
+			if (args[0].toLowerCase().equals("label")) {
 				this.labels.put(args[1].toLowerCase(), i);
 			}
 		}
@@ -71,6 +70,7 @@ public class ToyAssembler {
 		for (int i = 0; i < this.syntax.size(); i++) {
 			String[] args = this.syntax.get(i);
 			int lineNum = i + 1;
+			System.out.print(String.format("\n[DEBUG:73]:\n%s", this.toString()));
 
 			switch (args[0].toLowerCase()) {
 				case ";": // Comment
@@ -78,7 +78,7 @@ public class ToyAssembler {
 					break;
 
 				case "end":
-					return "";
+					return out.toString();
 
 				case "set":
 					out.append(setMem(Integer.parseInt(args[1]), Integer.parseInt(args[2])));
@@ -89,7 +89,7 @@ public class ToyAssembler {
 					break;
 
 				case "store":
-					out.append(store(args[1], Integer.parseInt(args[2])));
+					out.append(store(Integer.parseInt(args[1]), args[2]));
 					break;
 
 				case "add":
@@ -125,6 +125,8 @@ public class ToyAssembler {
 					out.append(String.format("Illegal operator '%s' at line %d\n", args[0], lineNum));
 					break;
 			}
+
+			System.out.print(String.format("\n[DEBUG:129]:\n%s", this.toString()));
 		}
 
 		return out.toString();
@@ -135,7 +137,7 @@ public class ToyAssembler {
 		StringBuilder out = new StringBuilder();
 		out.append("Registers: {");
 		for (String reg : this.state.keySet()) {
-			out.append(reg + ": " + this.state.get(reg) + ", ");
+			out.append(String.format("%s: %d, ", reg, this.state.get(reg)));
 		}
 		out.append("}\nMemory: {");
 		for (int mem : this.memory) {
@@ -144,6 +146,14 @@ public class ToyAssembler {
 		out.append("}\nLabels: {");
 		for (String label : this.labels.keySet()) {
 			out.append(String.format("%s: %d, ", label, labels.get(label)));
+		}
+		out.append("}\nSyntax:\n{");
+		for (String[] line : this.syntax) {
+			out.append("\t[ ");
+			for (String token : line) {
+				out.append(String.format("%s, ", token));
+			}
+			out.append(" ],\n");
 		}
 		out.append("}");
 		return out.toString();
@@ -203,7 +213,7 @@ public class ToyAssembler {
 		return "";
 	}
 
-	public String store(String register, int memCell) {
+	public String store(int memCell, String register) {
 		if (!this.state.containsKey(register)) {
 			return String.format("Register %s does not exist", register);
 		}
