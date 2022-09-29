@@ -1,11 +1,6 @@
-; Prepping
-; [0,0,0,...]
 SET 0 9
 SET 1 1
-; [9,1,0,0,0,...]
-; Execution
 LOAD F1 1
-; F1: 1
 LABEL loop
 LOAD F0 0
 SUB F0 F1

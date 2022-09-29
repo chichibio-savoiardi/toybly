@@ -70,7 +70,7 @@ public class ToyAssembler {
 		for (int i = 0; i < this.syntax.size(); i++) {
 			String[] args = this.syntax.get(i);
 			int lineNum = i + 1;
-			System.out.print(String.format("\n[DEBUG:73]:\n%s", this.toString()));
+			//System.out.print(String.format("\n[DEBUG:73]:\n%s", this.toString()));
 
 			switch (args[0].toLowerCase()) {
 				case ";": // Comment
@@ -126,7 +126,7 @@ public class ToyAssembler {
 					break;
 			}
 
-			System.out.print(String.format("\n[DEBUG:129]:\n%s", this.toString()));
+			//System.out.print(String.format("\n[DEBUG:129]:\n%s", this.toString()));
 		}
 
 		return out.toString();
@@ -222,7 +222,7 @@ public class ToyAssembler {
 			return String.format("Memory cell num. %d does not exist", memCell);
 		}
 
-		setMem(getReg(register), memCell);
+		setMem(memCell, getReg(register));
 
 		return "";
 	}
